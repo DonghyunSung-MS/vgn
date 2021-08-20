@@ -11,12 +11,13 @@ from vgn.utils.transform import Rotation, Transform
 
 
 class ClutterRemovalSim(object):
-    def __init__(self, scene, object_set, gui=True, seed=None):
+    def __init__(self, scene, object_set, data_type, gui=True, seed=None):
         assert scene in ["pile", "packed"]
 
         self.urdf_root = Path("data/urdfs")
         self.scene = scene
         self.object_set = object_set
+        self.data_type = data_type
         self.discover_objects()
 
         self.global_scaling = {"blocks": 1.67}.get(object_set, 1.0)
@@ -34,7 +35,7 @@ class ClutterRemovalSim(object):
         return max(0, self.world.p.getNumBodies() - 1)  # remove table from body count
 
     def discover_objects(self):
-        root = self.urdf_root / self.object_set
+        root = self.urdf_root / self.object_set / self.data_type
         self.object_urdfs = [f for f in root.iterdir() if f.suffix == ".urdf"]
 
     def save_state(self):
